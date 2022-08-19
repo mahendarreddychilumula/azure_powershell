@@ -16,10 +16,18 @@ $subnet = @{
     AddressPrefix = '10.10.0.0/24'
 }
 $subnetconfig = Add-AzVirtualNetworkSubnetConfig @subnet
-Remove-AzResourceGroup -name mahendar -Force
+##Remove-AzResourceGroup -name mahendar -Force 
+$vm1 = @{
+  ResourceGroupName = $resorce_group.name
+  Location = $resorce_group.location
+  Name = 'myVM1'
+  VirtualNetworkName = $VirtualNetwork
+  SubnetName = $subnetconfig
+}
+New-AzVM @vm1 -AsJob
 
-if (!(Get-AzResourceGroup mahendar -ErrorAction SilentlyContinue))
-  { New-AzResourceGroup @resorce_group }
-else
-   {"found"} 
+##if (!(Get-AzResourceGroup mahendar -ErrorAction SilentlyContinue))
+  ##{ New-AzResourceGroup @resorce_group }
+##else
+  ## {"found"} 
    
