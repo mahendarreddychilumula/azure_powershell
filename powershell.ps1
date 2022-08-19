@@ -18,8 +18,8 @@ $subnet = @{
 $subnetconfig = Add-AzVirtualNetworkSubnetConfig @subnet
 Remove-AzResourceGroup -name mahendar -Force
 
-##if (!(Get-AzResourceGroup mahendar -ErrorAction SilentlyContinue))
-  ##{ New-AzResourceGroup @resorce_group }
-##else
-  ## {"found"} 
+if (!(Get-AzResourceGroup mahendar -ErrorAction SilentlyContinue))
+  { New-AzResourceGroup @resorce_group }
+else
+   {"found"} 
    
