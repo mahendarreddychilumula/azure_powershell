@@ -16,13 +16,18 @@ $subnet = @{
     AddressPrefix = '10.10.0.0/24'
 }
 $subnetconfig = Add-AzVirtualNetworkSubnetConfig @subnet
-##Remove-AzResourceGroup -name mahendar -Force 
+##Remove-AzResourceGroup -name mahendar -Force
+$Username = "MyUser"
+$Password = 'Password123!' | ConvertTo-SecureString -Force -AsPlainText
+$Credential = New-Object -TypeName PSCredential -ArgumentList ($Username, $Password) 
 $vm1 = @{
   ResourceGroupName = $resorce_group.name
   Location = $resorce_group.location
   Name = 'myVM1'
   VirtualNetworkName = $VirtualNetwork
   SubnetName = $subnetconfig
+  Credential = $Credential 
+
 }
 New-AzVM @vm1 -AsJob
 
