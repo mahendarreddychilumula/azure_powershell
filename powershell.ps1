@@ -1,6 +1,6 @@
 $resorce_group = @{ 
 name = 'mahendar'
-location = 'eastus'
+location = 'East US'
 }
  New-AzResourceGroup @resorce_group
 $vnet = @{
@@ -41,9 +41,9 @@ $Password = 'Password123!' | ConvertTo-SecureString -Force -AsPlainText
 $Credential = New-Object -TypeName PSCredential -ArgumentList ($Username, $Password) 
 
 New-AzVm `
-    -ResourceGroupName $resorce_group.name `
+    -ResourceGroupName 'mahendar' `
     -Name 'myVM' `
-    -Location $resorce_group.location `
+    -Location 'East US' `
     -VirtualNetworkName $VirtualNetwork.name `
     -SubnetName 'subnet' `
     -SecurityGroupName 'myNetworkSecurityGroup' `
@@ -55,21 +55,39 @@ New-AzVm `
     $vmName = 'myVM'
     $imageName = 'myImage'
     $rgName = 'mahendar'
-    $location = 'EastUS'
-
+    $location = 'East US'
+    
     Stop-AzVM -ResourceGroupName $rgName -Name $vmName -Force
     Set-AzVm -ResourceGroupName $rgName -Name $vmName -Generalized
     $vm = Get-AzVM -Name $vmName -ResourceGroupName $rgName
     $image = New-AzImageConfig -Location $location -SourceVirtualMachineId $vm.Id
     New-AzImage -Image $image -ImageName $imageName -ResourceGroupName $rgName
-
+  
 $storage =@{
-  ResourceGroupName = $resorce_group.name
+  ResourceGroupName = 'mahendar'
   name     = 'mahendar1234567890'
-  SkuName  = 'Premium_LRS'
-  Location = $resorce_group.location
+  SkuName  = 'Standard_LRS'
+  Location = 'East US'
 }
-New-AzStorageAccount  @storage
+$storageac = New-AzStorageAccount @storage
+
+ 
+
+
+
+$key1 = (Get-AzStorageAccountKey -ResourceGroupName 'mahendar' -Name 'mahendar1234567890').value
+$storagecontext = new-azstoragecontext -storageaccountname mahendar1234567890 -StorageAccountKey $key1.getvalue(0)
+new-azstoragecontainer -name 'mahendarcontainer' -Permission 'Container' -context $storagecontext
+$Blob1HT = @{
+  File             = 'C:\Users\mahen\OneDrive\Pictures\a.png'
+  Container        = 'mahendarcontainer'
+  Blob             = "a.png"
+  Context          = $storagecontext 
+  StandardBlobTier = 'Hot'
+}
+Set-AzStorageBlobContent @Blob1HT
+ls -File -Path 'C:\Users\mahen\OneDrive\Pictures'  |  Set-AzStorageBlobContent -Container shiv002container -context $storagecontext
+
 
 
 ##if (!(Get-AzResourceGroup mahendar -ErrorAction SilentlyContinue))
