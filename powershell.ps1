@@ -43,7 +43,7 @@ $Credential = New-Object -TypeName PSCredential -ArgumentList ($Username, $Passw
 New-AzVm `
     -ResourceGroupName 'mahendar' `
     -Name 'myVM' `
-    -Location 'East US' `
+    -Location 'EastUS' `
     -VirtualNetworkName $VirtualNetwork.name `
     -SubnetName 'subnet' `
     -SecurityGroupName 'myNetworkSecurityGroup' `
@@ -77,16 +77,17 @@ $storageac = New-AzStorageAccount @storage
 
 $key1 = (Get-AzStorageAccountKey -ResourceGroupName 'mahendar' -Name 'mahendar1234567890').value
 $storagecontext = new-azstoragecontext -storageaccountname mahendar1234567890 -StorageAccountKey $key1.getvalue(0)
-new-azstoragecontainer -name 'mahendarcontainer' -Permission 'Container' -context $storagecontext
+new-azstoragecontainer -name 'mahendarcontainerr' -Permission 'Container' -context $storagecontext
 $Blob1HT = @{
-  File             = 'C:\Users\mahen\OneDrive\Pictures\a.png'
-  Container        = 'mahendarcontainer'
-  Blob             = "a.png"
+  File             = 'C:\Users\mahen\OneDrive\Desktop\script1.ps1'
+  Container        = 'mahendarcontainerr'
+  Blob             = 'script1.ps1'
   Context          = $storagecontext 
   StandardBlobTier = 'Hot'
 }
 Set-AzStorageBlobContent @Blob1HT
-ls -File -Path 'C:\Users\mahen\OneDrive\Pictures'  |  Set-AzStorageBlobContent -Container shiv002container -context $storagecontext
+
+Set-AzVMCustomScriptExtension -ResourceGroupName 'mahendar' -Location 'eastus' -VMName 'myVM1' -Name 'script1.ps1'-TypeHandlerVersion "1.1" -StorageAccountName 'mahendar1234567890' -StorageAccountKey $key1.getvalue(0) -FileName 'script1.ps1' -ContainerName 'mahendarcontainerr' 
 
 
 
