@@ -13,9 +13,9 @@ $defId = "8"
 $restApiRunBuild = "https://dev.azure.com/$org/$teamProject/_apis/build/builds?definitionId=$defId&api-version=6.1-preview.6"
 
 
-function InvokePostReques ($PostUrl, $body)
+function InvokePostReques ($restApiRunBuild)
 {   
-    return Invoke-RestMethod -Uri $PostUrl -Method Post -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)}  -Body $body
+    return Invoke-RestMethod -Uri $restApiRunBuild -Method Post -ContentType "application/json" -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)}  
 }
 
 $result = InvokePostReques $restApiRunBuild ""
